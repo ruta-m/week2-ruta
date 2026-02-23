@@ -9,10 +9,10 @@ import "./App.css";
 // import TradeForm from "./components/TradeForm";
 
 // Data
-import { stocks, trades, positions } from './data/stockData';
+import { stocks, trades, positions, holdings } from './data/stockData';
 
 // Types
-import type { Stock, Trade, Position }   from './types/stock.types';
+import type { Stock, Trade, Position, Holdings }   from './types/stock.types';
 
 // Components
 import StockCard from './components/StockCard';
@@ -162,6 +162,25 @@ function App() {
               return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
                 {n >= 0 ? '+' : ''}{n.toFixed(2)}%
               </span>;}}
+        ]}
+      />
+
+      {/* Holdings Table */}
+      <h2 style={{color: '#1E40AF'}}>Holdings Table</h2>
+      <DataTable<Holdings>
+        data={holdings}
+        rowKey='id'
+        columns = {[
+          {key: 'id', header: 'ID'},
+          {key: 'symbol', header: 'Symbol'},
+          {key: 'qty', header: 'Quantity'},
+          {key: 'investedValue', header: 'Invested Value'},
+          {key: 'currentValue', header: 'Current Value'},
+          {key: 'totalReturn', header: 'Total Return', render: v => {
+              const n = Number(v);
+              return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
+                {n >= 0 ? '+' : ''}{n.toFixed(0)}
+              </span>;}},
         ]}
       />
  
