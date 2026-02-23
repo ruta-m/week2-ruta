@@ -1,6 +1,6 @@
 // Sample stock data
 
-import type { Stock, Trade } from "../types/stock.types.ts";
+import type { Stock, Trade, Position } from "../types/stock.types.ts";
 
 export const stocks: Stock[] = [
   {
@@ -87,5 +87,53 @@ export const trades: Trade[] = [
     quantity: 8,
     price: 265.0,
     date: "2024-03-10",
+  },
+];
+
+export const positions: Position[] = [
+  {
+    id: "p1",
+    symbol: "AAPL",
+    qty: 10,
+    avgPrice: 175.0,
+    ltp: 189.3,
+    pnl: 143.0,
+    pnlPct: 8.17,
+  },
+  {
+    id: "p2",
+    symbol: "MSFT",
+    qty: 5,
+    avgPrice: 360.0,
+    ltp: 378.9,
+    pnl: 94.5,
+    pnlPct: 5.25,
+  },
+  {
+    id: "p3",
+    symbol: "TSLA",
+    qty: 8,
+    avgPrice: 265.0,
+    ltp: 248.5,
+    pnl: -132.0,
+    pnlPct: -6.23,
+  },
+  {
+    id: "p4",
+    symbol: "GOOGL",
+    qty: 15,
+    avgPrice: 145.0,
+    ltp: 141.8,
+    pnl: -48.0,
+    pnlPct: -2.21,
+  },
+  {
+    id: "p5",
+    symbol: "JPM",
+    qty: 20,
+    avgPrice: 192.0,
+    ltp: 196.4,
+    pnl: 88.0,
+    pnlPct: 2.29,
   },
 ];
