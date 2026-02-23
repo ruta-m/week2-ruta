@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-// 1. Column definition is generic
 interface Column<T> {
   key: keyof T;
   header: string;
@@ -15,6 +14,7 @@ interface DataTableProps<T extends object> {
   rowKey: keyof T;
   onRowClick?: (row: T) => void;
   emptyMessage?: string;
+  filterKey?: keyof T; // NEW
 }
 
 type SortDir = "asc" | "desc" | null;
@@ -30,28 +30,31 @@ function DataTable<T extends object>({
   rowKey,
   onRowClick,
   emptyMessage = "No data found.",
+  filterKey,
 }: DataTableProps<T>) {
   const [sort, setSort] = useState<SortState<T>>({
     key: null,
     dir: null,
   });
 
-  // Toggle sorting
-  const handleSort = (key: keyof T) => {
-    setSort((prev) => ({
-      key,
-      dir: prev.key === key && prev.dir === "asc" ? "desc" : "asc",
-    }));
-  };
+  const [filterText, setFilterText] = useState("");
 
-  // Sort copy of data (never mutate original)
-  const sorted = [...data].sort((a, b) => {
+  // 1. Filtering
+  const filtered = filterKey && filterText
+    ? data.filter((row) =>
+        String(row[filterKey])
+          .toLowerCase()
+          .includes(filterText.toLowerCase())
+      )
+    : data;
+
+  // 2. Sorting
+  const sorted = [...filtered].sort((a, b) => {
     if (!sort.key || !sort.dir) return 0;
 
     const av = a[sort.key];
     const bv = b[sort.key];
 
-    // Handle numbers and strings safely
     if (typeof av === "number" && typeof bv === "number") {
       return sort.dir === "asc" ? av - bv : bv - av;
     }
@@ -61,58 +64,85 @@ function DataTable<T extends object>({
       : String(bv).localeCompare(String(av));
   });
 
-  if (data.length === 0) return <p>{emptyMessage}</p>;
+  const handleSort = (key: keyof T) => {
+    setSort((prev) => ({
+      key,
+      dir: prev.key === key && prev.dir === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  if (sorted.length === 0) return <p>{emptyMessage}</p>;
 
   return (
-    <table style={{ width: "100%", borderCollapse: "collapse" }}>
-      <thead>
-        <tr style={{ background: "#1E3A8A", color: "#fff" }}>
-          {columns.map((col) => (
-            <th
-              key={String(col.key)}
-              onClick={() => col.sortable && handleSort(col.key)}
-              style={{
-                padding: 8,
-                textAlign: "left",
-                cursor: col.sortable ? "pointer" : "default",
-                userSelect: "none",
-              }}
-            >
-              {col.header}
-
-              {/* Sort indicator */}
-              {col.sortable &&
-                (sort.key === col.key
-                  ? sort.dir === "asc"
-                    ? " ▲"
-                    : " ▼"
-                  : " ⇅")}
-            </th>
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {sorted.map((row, ri) => (
-          <tr
-            key={String(row[rowKey])}
-            onClick={() => onRowClick?.(row)}
+    <div>
+      {/* Search Input */}
+      {filterKey && (
+        <div style={{ marginBottom: 8 }}>
+          <input
+            type="text"
+            placeholder={`Filter by ${String(filterKey)}...`}
+            value={filterText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFilterText(e.target.value)
+            }
             style={{
-              background: ri % 2 === 0 ? "#fff" : "#F8FAFC",
-              cursor: onRowClick ? "pointer" : "default",
+              padding: "6px 10px",
+              borderRadius: 4,
+              border: "1px solid #D1D5DB",
+              width: 220,
             }}
-          >
+          />
+        </div>
+      )}
+
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ background: "#1E3A8A", color: "#fff" }}>
             {columns.map((col) => (
-              <td key={String(col.key)} style={{ padding: 8 }}>
-                {col.render
-                  ? col.render(row[col.key], row)
-                  : String(row[col.key])}
-              </td>
+              <th
+                key={String(col.key)}
+                onClick={() => col.sortable && handleSort(col.key)}
+                style={{
+                  padding: 8,
+                  textAlign: "left",
+                  cursor: col.sortable ? "pointer" : "default",
+                  userSelect: "none",
+                }}
+              >
+                {col.header}
+                {col.sortable &&
+                  (sort.key === col.key
+                    ? sort.dir === "asc"
+                      ? " ▲"
+                      : " ▼"
+                    : " ⇅")}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {sorted.map((row, ri) => (
+            <tr
+              key={String(row[rowKey])}
+              onClick={() => onRowClick?.(row)}
+              style={{
+                background: ri % 2 === 0 ? "#fff" : "#F8FAFC",
+                cursor: onRowClick ? "pointer" : "default",
+              }}
+            >
+              {columns.map((col) => (
+                <td key={String(col.key)} style={{ padding: 8 }}>
+                  {col.render
+                    ? col.render(row[col.key], row)
+                    : String(row[col.key])}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
