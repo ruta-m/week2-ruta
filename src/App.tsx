@@ -156,7 +156,11 @@ function App() {
           {key: 'qty', header:'Quantity'},
           {key: 'avgPrice', header: 'Average Price'},
           {key: 'ltp', header: 'Last Traded Price', render: v => `$${Number(v).toFixed(2)}`},
-          {key: 'pnl', header:'P&L'},
+          {key: 'pnl', header:'P&L', render: v => {
+              const n = Number(v);
+              return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
+                {n}
+              </span>;}},
           {key: 'pnlPct', header:'P&L%', render: v => {
               const n = Number(v);
               return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
