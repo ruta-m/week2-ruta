@@ -9,10 +9,10 @@ import "./App.css";
 // import TradeForm from "./components/TradeForm";
 
 // Data
-import { stocks, trades } from './data/stockData';
+import { stocks, trades, positions } from './data/stockData';
 
 // Types
-import type { Stock, Trade }   from './types/stock.types';
+import type { Stock, Trade, Position }   from './types/stock.types';
 
 // Components
 import StockCard from './components/StockCard';
@@ -143,6 +143,25 @@ function App() {
           { key: 'price',    header: 'Price',
             render: v => `$${Number(v).toFixed(2)}` },
           { key: 'date',     header: 'Date' },
+        ]}
+      />
+
+      {/* Positions Table */}
+      <h2 style={{color: '#1E40AF'}}>Positions Table</h2>
+      <DataTable<Position>
+        data={positions}
+        rowKey='id'
+        columns={[
+          {key: 'symbol', header:'Symbol'},
+          {key: 'qty', header:'Quantity'},
+          {key: 'avgPrice', header: 'Average Price'},
+          {key: 'ltp', header: 'Last Traded Price', render: v => `$${Number(v).toFixed(2)}`},
+          {key: 'pnl', header:'P&L'},
+          {key: 'pnlPct', header:'P&L%', render: v => {
+              const n = Number(v);
+              return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
+                {n >= 0 ? '+' : ''}{n.toFixed(2)}%
+              </span>;}}
         ]}
       />
  
