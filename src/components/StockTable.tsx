@@ -2,7 +2,7 @@
 
 import DataTable from './DataTable';
 import type { Stock } from '../types/stock.types';
-import TableSkeleton from '../skeletons/TableSkeleton';
+// import TableSkeleton from '../skeletons/TableSkeleton';
 
 interface Props {
   stocks: Stock[]
