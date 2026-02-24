@@ -7,6 +7,10 @@ import "./App.css";
 // import PortfolioSummary from './components/PortfolioSummary';
 // import DataTable from "./components/DataTable";
 // import TradeForm from "./components/TradeForm";
+// import TradeFeature from './features/trades/TradeFeature';
+import LiveQuotesFeature from './features/quotes/LiveQuotesFeature';
+// import useVirtualList from './hooks/useVirtualList';
+// import useInfiniteScroll from './hooks/useInfiniteScroll';
 
 // Data
 import { stocks, trades, positions, holdings } from './data/stockData';
@@ -20,40 +24,10 @@ import PortfolioSummary from './components/PortfolioSummary';
 import SearchBar from './components/SearchBar';
 import DataTable from './components/DataTable';
 import TradeForm from './components/TradeForm';
-
-
-// function App() {
-//   return (
-//     <>
-//       <DataTable
-//         data={stocks}
-//         rowKey="id"
-//         columns={[
-//           { key: "symbol", header: "Symbol" },
-//           {
-//             key: "price",
-//             header: "Price",
-//             render: (val) => `$${Number(val).toFixed(2)}`,
-//           },
-//           {
-//             key: "changePct",
-//             header: "Change %",
-//             render: (val) => {
-//               const n = Number(val);
-//               return (
-//                 <span style={{ color: n >= 0 ? "green" : "red" }}>
-//                   {n >= 0 ? "+" : ""} {n.toFixed(2)}%
-//                 </span>
-//               );
-//             },
-//           },
-//         ]}
-//       ></DataTable>
-//     </>
-//   );
-// }
-
-// Representational layer
+import TradeFeature from './features/trades/TradeFeature';
+import CardGridSkeleton from './skeletons/CardGridSkeleton';
+import TableSkeleton from './skeletons/TableSkeleton';
+import FormSkeleton from './skeletons/FormSkeleton';
 
 function App() {
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
@@ -82,6 +56,12 @@ function App() {
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: 24, fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ color: '#1E3A8A' }}>Stock Market Dashboard</h1>
+
+      <CardGridSkeleton/>
+      Card grid skeleton
+
+      <TableSkeleton/>
+      table skeleton
  
       {/* Event Typing */}
       <SearchBar
@@ -105,7 +85,7 @@ function App() {
       {/* Typing State */}
       <PortfolioSummary availableStocks={stocks} />
  
-      {/* Generic Components — Stock table */}
+      {/* Generic Components — Stock table
       <h2 style={{ color: '#1E40AF' }}>Live Quotes</h2>
       <DataTable<Stock>
         data={filteredStocks}
@@ -127,7 +107,7 @@ function App() {
           { key: 'volume', header: 'Volume',
             render: v => Number(v).toLocaleString() },
         ]}
-      />
+      /> */}
  
       {/* Generic Components — Trade table */}
       <h2 style={{ color: '#1E40AF' }}>Trade History</h2>
@@ -146,6 +126,7 @@ function App() {
         ]}
       />
 
+  
       {/* Positions Table */}
       <h2 style={{color: '#1E40AF'}}>Positions Table</h2>
       <DataTable<Position>
@@ -197,6 +178,14 @@ function App() {
         onSubmitTrade={handleNewTrade}
         initialValues={selectedStock ?? {}}
       />
+
+      <LiveQuotesFeature selectedStock={stocks[0]} onSelectStock={()=>{}} stocks={stocks} onSearch={()=>{}} onFilterChange={()=>{}} />
+
+   <FormSkeleton />  
+   Form skeleton
+
+      <TradeFeature tradeHistory={trades} stocks={stocks} selectedStock={stocks[1]} onSubmitTrade={()=>{}}/>  
+
     </div>
   );
 }
