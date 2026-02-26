@@ -13,6 +13,7 @@
 //   - handleNewTrade function
 //   - All prop values passed to features
  
+import PositionComparePanel from './components/PositionComparePanel';
 import { lazy, useState } from 'react';
 //                ^    ^
 //                |    useState — you already know this
@@ -39,6 +40,7 @@ import FormSkeleton     from './skeletons/FormSkeleton';
 
 import './App.css';
 import MarketTicker from "./features/market/MarketTicker";
+import StockComparePanel from './components/StockComparePanel';
 
 // ── Feature components (LAZY — each becomes a separate chunk) ─────────
  
@@ -101,6 +103,10 @@ function App() {
       <h1 style={{ color: '#1E3A8A' }}>Stock Market Dashboard</h1>
 
       <MarketTicker />
+
+      <StockComparePanel />
+
+      <PositionComparePanel/>
  
       {/* ── FEATURE 1: Live Quotes — uses BOTH skeletons ── */}
       <SuspenseBoundary
